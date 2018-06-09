@@ -23,6 +23,8 @@ return [
             'enabled'   => true,
             'fields'    => [
                 'Source-IP',
+                'from',
+                'to',
             ],
         ],
 

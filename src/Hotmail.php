@@ -3,6 +3,7 @@
 namespace AbuseIO\Parsers;
 
 use AbuseIO\Models\Incident;
+use PhpMimeMailParser\Parser as MimeParser;
 
 /**
  * Class Hotmail
@@ -39,6 +40,18 @@ class Hotmail extends Parser
             $report['Source-IP'] = $matches[1];
         }
 
+        // parse attached mail
+        foreach ($this->parsedMail->getAttachments(true) as $attachment) {
+            $spammail = new MimeParser();
+            $spammail->setText($attachment->getContent());
+            if (!empty($spammail->getHeader('from'))) {
+                $report['from'] = $spammail->getHeader('from');
+            }
+            if (!empty($spammail->getHeader('to'))) {
+                $report['to'] = $spammail->getHeader('to');
+            }
+        }
+
         if ($this->hasRequiredFields($report) === true) {
             $report = $this->applyFilters($report);
             $incident = new Incident();
@@ -48,7 +61,7 @@ class Hotmail extends Parser
             $incident->domain      = false;
             $incident->class       = config("{$this->configBase}.feeds.default.class");
             $incident->type        = config("{$this->configBase}.feeds.default.type");
-            $incident->timestamp   = time();
+            $incident->timestamp   = strtotime($this->parsedMail->getHeader('date'));
             $incident->information = json_encode($report);
             $this->incidents[] = $incident;
         }
