@@ -25,6 +25,7 @@ return [
                 'Source-IP',
                 'from',
                 'to',
+                'subject',
             ],
         ],
 

@@ -50,6 +50,9 @@ class Hotmail extends Parser
             if (!empty($spammail->getHeader('to'))) {
                 $report['to'] = $spammail->getHeader('to');
             }
+            if (!empty($spammail->getHeader('subject'))) {
+                $report['subject'] = $spammail->getHeader('subject');
+            }
         }
 
         if ($this->hasRequiredFields($report) === true) {
