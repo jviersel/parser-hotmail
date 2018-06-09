@@ -32,7 +32,7 @@ class Hotmail extends Parser
         /**
          *  There is no attached report, the information is all in the mail body
          */
-        $subject = $this->parsedMail->getSubject();
+        $subject = $this->parsedMail->getHeader('subject');
         $report = [];
 
         if (preg_match('/complaint about message from ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})/', $subject, $matches)) {
@@ -46,8 +46,8 @@ class Hotmail extends Parser
             $incident->source_id   = false;
             $incident->ip          = $report['Source-IP'];
             $incident->domain      = false;
-            $incident->class       = config("{$this->configBase}.feeds.{$this->feedName}.class");
-            $incident->type        = config("{$this->configBase}.feeds.{$this->feedName}.type");
+            $incident->class       = config("{$this->configBase}.feeds.default.class");
+            $incident->type        = config("{$this->configBase}.feeds.default.type");
             $incident->timestamp   = time();
             $incident->information = json_encode($report);
             $this->incidents[] = $incident;
