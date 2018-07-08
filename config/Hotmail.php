@@ -26,6 +26,7 @@ return [
                 'from',
                 'to',
                 'subject',
+                'original recipient',
             ],
         ],
 

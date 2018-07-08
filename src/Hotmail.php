@@ -44,6 +44,7 @@ class Hotmail extends Parser
         foreach ($this->parsedMail->getAttachments(true) as $attachment) {
             $spammail = new MimeParser();
             $spammail->setText($attachment->getContent());
+file_put_contents('/tmp/debug', 'test' . PHP_EOL . var_export($spammail->getHeader('x-hmxmroriginalrecipient'), true));
             if (!empty($spammail->getHeader('from'))) {
                 $report['from'] = $spammail->getHeader('from');
             }
@@ -52,6 +53,9 @@ class Hotmail extends Parser
             }
             if (!empty($spammail->getHeader('subject'))) {
                 $report['subject'] = $spammail->getHeader('subject');
+            }
+            if (!empty($spammail->getHeader('x-hmxmroriginalrecipient'))) {
+                $report['original recipient'] = $spammail->getHeader('x-hmxmroriginalrecipient');
             }
         }
 
